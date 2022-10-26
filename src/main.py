@@ -9,6 +9,7 @@ from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
 from models import db, User
+import hashlib
 #from models import Person
 
 app = Flask(__name__)
@@ -37,7 +38,25 @@ def handle_hello():
         "msg": "Hello, this is your GET /user response "
     }
 
-    return jsonify(response_body), 200
+@app.route('/signup', methods=['POST'])
+def handle_signup():
+
+    requestBody = request.get_json(force=True)
+    checkEmail = bool(User.query.filter_by(email = requestBody['email']).first())
+    if checkEmail:
+        return jsonify(requestBody)
+    else:
+        email = requestBody['email']
+        hash_password = hashlib.sha224(requestBody['password'].encode("UTF-8")).hexdigest()
+        user = User(
+            email = email,
+            password = hash_password,
+        )
+        db.session.add(user)
+        db.session.commit()
+        return jsonify('Success'), 200
+
+
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
