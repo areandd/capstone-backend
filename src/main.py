@@ -44,7 +44,7 @@ def handle_signup():
     requestBody = request.get_json(force=True)
     checkEmail = bool(User.query.filter_by(email = requestBody['email']).first())
     if checkEmail:
-        return jsonify(requestBody)
+        return jsonify('Email exists already')
     else:
         email = requestBody['email']
         hash_password = hashlib.sha224(requestBody['password'].encode("UTF-8")).hexdigest()
