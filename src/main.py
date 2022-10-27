@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User, Posts
+from models import db, User, Posts, Watchlist
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
@@ -95,9 +95,20 @@ def handle_getPosts():
     return jsonify(allPosts)
 
 
+@app.route('/watchlist', methods=['GET'])
+
+@jwt_required()
+
+def handle_watchlist():
+    requestBody = request.get_json(force=True)
+    userId = requestBody['user_id']
+    watchList = Watchlist.query.filter_by(user_id = userId).all()
+    fullWatchlist = list(map(lambda stock: stock.serialize(), watchList))
+    return jsonify(fullWatchlist)
 
 
-@app.route('/posts', methods=['POST'])
+
+
 
 
 

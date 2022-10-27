@@ -29,6 +29,7 @@ class Posts(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    headline = db.Column(db.String(100), nullable=False)
     content = db.Column(db.String(240), nullable=False)
     date_stamp = db.Column(db.String(80), nullable=False)
 
@@ -41,6 +42,7 @@ class Posts(db.Model):
         return {
             "id": self.id,
             "user_id": self.user_id,
+            "headline": self.headline,
             "content": self.content,
             "date_stamp": self.date_stamp
             # do not serialize the password, its a security breach
