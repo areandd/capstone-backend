@@ -41,14 +41,12 @@ def sitemap():
 
 @app.route('/user', methods=['GET'])
 def handle_hello():
-
     response_body = {
         "msg": "Hello, this is your GET /user response "
     }
 
 @app.route('/signup', methods=['POST'])
 def handle_signup():
-
     requestBody = request.get_json(force=True)
     checkEmail = bool(User.query.filter_by(email = requestBody['email']).first())
     if checkEmail:
@@ -66,7 +64,6 @@ def handle_signup():
 
 @app.route('/login', methods=['POST'])
 def handle_login():
-
     requestBody = request.get_json(force=True)
     email = requestBody['email']
     hash_password = hashlib.sha224(requestBody['password'].encode("UTF-8")).hexdigest()
@@ -78,27 +75,39 @@ def handle_login():
         return jsonify('User does not exist'), 401
 
 @app.route('/validate-token', methods=['GET'])
-
 @jwt_required()
-
 def handle_token():
     token = get_jwt_identity()
     return jsonify(loggedInAs = token), 200
 
 @app.route('/posts', methods=['GET'])
-
 @jwt_required()
-
 def handle_getPosts():
     posts = Posts.query.all()
     allPosts = list(map(lambda post: post.serialize(), posts))
     return jsonify(allPosts)
 
+@app.route('/posts', methods=['POST'])
+@jwt_required()
+def create_post():
+    requestBody = request.get_json(force=True)
+    user_id = requestBody['user_id']
+    headline = requestBody['headline']
+    content = requestBody['content']
+    date_stamp = requestBody['date_stamp']
+    post = Posts(
+        user_id = user_id,
+        headline = headline,
+        content = content,
+        date_stamp = date_stamp
+    )
+    db.session.add(post)
+    db.session.commit()
+    return jsonify('Success'), 200
+
 
 @app.route('/watchlist', methods=['GET'])
-
 @jwt_required()
-
 def handle_watchlist():
     requestBody = request.get_json(force=True)
     userId = requestBody['user_id']
