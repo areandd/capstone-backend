@@ -14,10 +14,14 @@ from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
 import hashlib
+from mailer import Mailer
+import random
+import smtplib
+from email.message import EmailMessage
 #from models import Person
 
 app = Flask(__name__)
-
+reset_code
 app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
 jwt = JWTManager(app)
 
@@ -117,11 +121,27 @@ def handle_watchlist():
 #     allPosts = list(map(lambda post: post.serialize(), posts))
 #     return jsonify(allPosts)
 
+@app.route('/reset-password', methods=['POST'])
+def reset_password():
+    requestBody = request.get_json(force=True)
+    email = requestBody['email']
+    reset_code = random.randint(1000, 99000)
+    check_email = User.query.filter_by(email = email).first()
+    admin_email = "goodstocksreset@gmail.com"
+    admin_password = "aimkhkmrsdiogksp"
+    if (check_email):
+        message = EmailMessage()
+        message["Subject"] = "reset your password"
+        message["From"] = admin_email
+        message["To"] = email
+        message.set_content("reset code: " + str(reset_code))
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp: 
+            smtp.login(admin_email, admin_password)
+            smtp.send_message(message)
 
-
-
-
-
+        return jsonify("successfully sent email to reset"), 200
+    else:
+        return jsonify("you failed to send reset email"), 400
 
 
 
