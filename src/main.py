@@ -21,7 +21,7 @@ from email.message import EmailMessage
 #from models import Person
 
 app = Flask(__name__)
-reset_code
+# reset_code
 app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
 jwt = JWTManager(app)
 
