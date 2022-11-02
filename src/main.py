@@ -123,6 +123,7 @@ def handle_watchlist():
 
 @app.route('/reset-password', methods=['POST'])
 def reset_password():
+    global email_code 
     requestBody = request.get_json(force=True)
     email = requestBody['email']
     reset_code = random.randint(1000, 99000)
@@ -138,10 +139,39 @@ def reset_password():
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp: 
             smtp.login(admin_email, admin_password)
             smtp.send_message(message)
-
+        email_code = reset_code
         return jsonify("successfully sent email to reset"), 200
     else:
         return jsonify("you failed to send reset email"), 400
+
+@app.route('/verify-code', methods=['POST'])
+def verify_code():
+    requestBody = request.get_json(force=True)
+    code = requestBody['password_code']
+    if (code == email_code):
+        return jsonify('code verified'), 200
+    else:
+        return jsonify('did not work'), 400
+
+@app.route('/change-password', methods=['PUT'])
+def change_password():
+    requestBody = request.get_json(force=True)
+    code = requestBody['password_code']
+    email = requestBody['email']
+    new_password = hashlib.sha224(requestBody['password'].encode("UTF-8")).hexdigest()
+    find_user = User.query.filter_by(email = email).first()
+    if (find_user and code == email_code):
+        find_user.password = new_password
+        db.session.commit()
+        return jsonify('Password successfully changed'), 200
+    else:
+        return jsonify('Unsuccessful, try again'), 400
+
+    
+
+
+
+    
 
 
 
