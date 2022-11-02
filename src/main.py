@@ -121,6 +121,8 @@ def handle_watchlist():
 #     allPosts = list(map(lambda post: post.serialize(), posts))
 #     return jsonify(allPosts)
 
+
+
 @app.route('/reset-password', methods=['POST'])
 def reset_password():
     global email_code 
@@ -148,7 +150,8 @@ def reset_password():
 def verify_code():
     requestBody = request.get_json(force=True)
     code = requestBody['password_code']
-    if (code == email_code):
+    print(email_code)
+    if (int(code) == email_code):
         return jsonify('code verified'), 200
     else:
         return jsonify('did not work'), 400
@@ -160,7 +163,7 @@ def change_password():
     email = requestBody['email']
     new_password = hashlib.sha224(requestBody['password'].encode("UTF-8")).hexdigest()
     find_user = User.query.filter_by(email = email).first()
-    if (find_user and code == email_code):
+    if (find_user and int(code) == email_code):
         find_user.password = new_password
         db.session.commit()
         return jsonify('Password successfully changed'), 200
