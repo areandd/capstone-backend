@@ -139,8 +139,8 @@ def deleteFromWatchlist():
     user_id = requestBody['user_id']
     stock = requestBody['stock']
     find_stock = Watchlist.query.filter_by(user_id = user_id, stock = stock).first()
-    if(find_stock and stock == stock):
-        db.session.delete(stock)
+    if(find_stock):
+        db.session.delete(find_stock)
         db.session.commit()
         return jsonify('Stock deletion successful'), 200
     else:
