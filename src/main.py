@@ -117,6 +117,43 @@ def handle_watchlist():
     fullWatchlist = list(map(lambda stock: stock.serialize(), watchList))
     return jsonify(fullWatchlist)
 
+@app.route('/watchlist-add', methods=['POST'])
+@jwt_required()
+def addToWatchlist():
+    requestBody = request.get_json(force=True)
+    user_id = requestBody['user_id']
+    stock = requestBody['stock']
+    watchlist = Watchlist(
+        user_id = user_id,
+        stock = stock
+    )
+    db.session.add(watchlist)
+    db.session.commit()
+    return jsonify('Success'), 200
+
+
+@app.route('/watchlist-delete', methods=['DELETE'])
+@jwt_required()
+def deleteFromWatchlist():
+    requestBody = request.get_json(force=True)
+    user_id = requestBody['user_id']
+    stock = requestBody['stock']
+    find_stock = Watchlist.query.filter_by(user_id = user_id, stock = stock).first()
+    if(find_stock and stock == stock):
+        db.session.delete(stock)
+        db.session.commit()
+        return jsonify('Stock deletion successful'), 200
+    else:
+        return jsonify('Unsuccessful'), 400
+    # requestBody = request.get_json(force=True)
+    # user_id = requestBody['user_id']
+    # stock = requestBody['stock']
+    # find_stock = User.query.filter_by(user_id = user_id, stock = stock).first()
+    # if(find_stock and stock = stock):
+
+
+    
+
 # posts = Posts.query.all()
 #     allPosts = list(map(lambda post: post.serialize(), posts))
 #     return jsonify(allPosts)
