@@ -61,6 +61,7 @@ def handle_signup():
         user = User(
             email = email,
             password = hash_password,
+            user_name = requestBody["user_name"]
         )
         db.session.add(user)
         db.session.commit()
@@ -208,15 +209,54 @@ def change_password():
         return jsonify('Unsuccessful, try again'), 400
 
     
+@app.route("/profile-changes", methods=["PUT"])
+@jwt_required()
+def modify_profile():
+    requestBody = request.get_json(force=True)
+    user = User.query.get(requestBody["userId"])
+    email = requestBody["email"]
+    name = requestBody["name"]
+    user_name = requestBody["user_name"]
+    banner = requestBody["banner"]
+    profile_photo = requestBody["profile_photo"]
+    bio = requestBody["bio"]
+    following = requestBody["following"]
+    followers = requestBody["followers"]
+    if email:
+        user.email = email
+    if name:
+        user.name = name
+    if user_name:
+        user.user_name = user_name
+    if banner:
+        user.banner = banner
+    if profile_photo:
+        user.profile_photo = profile_photo
+    if bio:
+        user.bio = bio
+    if following:
+        user.following = following
+    if followers:
+        user.followers = followers
+    db.session.commit()
+    return jsonify("success"), 200
 
 
-
+@app.route("/user-profile", methods=["GET"])
+def check_user():
+    requestBody = request.get_json(force=True)
+    print(requestBody)
+    user_name = requestBody["user_name"]
+    if user_name:
+        user = User.query.filter_by(user_name = user_name).first()
+        user_info = user.serialize()
+        print(user)
+        if user:
+            return jsonify(user_info), 200
+        else:
+            return jsonify("user does not exist!"), 400
     
-
-
-
-
-
+        
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':

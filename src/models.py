@@ -9,13 +9,13 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
-    name = db.Column(db.String(25), unique=False, nullable=False)
-    user_name = db.Column(db.String(25), unique=False, nullable=False)
-    banner = db.Column(db.String(500), unique=False, nullable=False)
-    profile_photo = db.Column(db.String(500), unique=False, nullable=False)
-    bio = db.Column(db.String(250), unique=False, nullable=False)
-    following = db.Column(db.Integer, unique=False, nullable=False)
-    followers = db.Column(db.Integer, unique=False, nullable=False)
+    name = db.Column(db.String(25), unique=False, nullable=False, default="name")
+    user_name = db.Column(db.String(25), unique=True, nullable=False)
+    banner = db.Column(db.String(500), unique=False)
+    profile_photo = db.Column(db.String(500), unique=False)
+    bio = db.Column(db.String(250), unique=False)
+    following = db.Column(db.Integer, unique=False)
+    followers = db.Column(db.Integer, unique=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False, default=True)
     watchlist = db.relationship('Watchlist')
     posts = db.relationship('Posts')
@@ -27,6 +27,7 @@ class User(db.Model):
         return {
             "id": self.id,
             "email": self.email,
+            "banner": self.banner
             # do not serialize the password, its a security breach
         }
 
