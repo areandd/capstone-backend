@@ -11,8 +11,8 @@ class User(db.Model):
     password = db.Column(db.String(80), unique=False, nullable=False)
     name = db.Column(db.String(25), unique=False, nullable=False, default="name")
     user_name = db.Column(db.String(25), unique=True, nullable=False)
-    banner = db.Column(db.String(500), unique=False)
-    profile_photo = db.Column(db.String(500), unique=False)
+    banner = db.Column(db.String(500), default="https://pbs.twimg.com/media/D-jnKUPU4AE3hVR.jpg", unique=False)
+    profile_photo = db.Column(db.String(500), default="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png", unique=False)
     bio = db.Column(db.String(250), unique=False)
     following = db.Column(db.Integer, unique=False)
     followers = db.Column(db.Integer, unique=False)
@@ -26,8 +26,13 @@ class User(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "email": self.email,
-            "banner": self.banner
+            "banner": self.banner,
+            "name": self.name,
+            "user_name": self.user_name,
+            "profile_photo": self.profile_photo,
+            "bio": self.bio,
+            "following": self.following,
+            "followers": self.followers,
             # do not serialize the password, its a security breach
         }
 

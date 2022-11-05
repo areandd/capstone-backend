@@ -244,9 +244,8 @@ def modify_profile():
 
 @app.route("/user-profile", methods=["GET"])
 def check_user():
-    requestBody = request.get_json(force=True)
-    print(requestBody)
-    user_name = requestBody["user_name"]
+    
+    user_name = request.args.get("key")
     if user_name:
         user = User.query.filter_by(user_name = user_name).first()
         user_info = user.serialize()
@@ -255,7 +254,7 @@ def check_user():
             return jsonify(user_info), 200
         else:
             return jsonify("user does not exist!"), 400
-    
+     
         
 
 # this only runs if `$ python src/main.py` is executed
