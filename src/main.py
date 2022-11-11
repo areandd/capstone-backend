@@ -83,7 +83,8 @@ def handle_login():
 @jwt_required()
 def handle_token():
     token = get_jwt_identity()
-    return jsonify(loggedInAs = token), 200
+    user = User.query.get(token)
+    return jsonify(loggedInAs = token, user_name = user.user_name), 200
 
 @app.route('/posts', methods=['GET'])
 @jwt_required()
