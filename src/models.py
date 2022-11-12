@@ -21,7 +21,7 @@ class User(db.Model):
     posts = db.relationship('Posts')
 
     def __repr__(self):
-        return '<User %r>' % self.id
+        return '<User %r>' % self.user_name
 
     def serialize(self):
         return {
