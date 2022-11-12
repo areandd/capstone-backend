@@ -115,7 +115,8 @@ def create_post():
 @app.route('/watchlist', methods=['GET'])
 @jwt_required()
 def handle_watchlist():
-    watchList = Watchlist.query.all()
+    id = get_jwt_identity()
+    watchList = Watchlist.query.filter_by(user_id=id)
     fullWatchlist = list(map(lambda stock: stock.serialize(), watchList))
     return jsonify(fullWatchlist)
 
