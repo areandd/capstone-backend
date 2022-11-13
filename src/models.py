@@ -9,8 +9,8 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
-    name = db.Column(db.String(25), unique=False, nullable=False, default="name")
-    user_name = db.Column(db.String(25), unique=True, nullable=False)
+    name = db.Column(db.String(100), unique=False, nullable=False, default="name")
+    user_name = db.Column(db.String(30), unique=True, nullable=False)
     banner = db.Column(db.String(500), default="https://pbs.twimg.com/media/D-jnKUPU4AE3hVR.jpg", unique=False)
     profile_photo = db.Column(db.String(500), default="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png", unique=False)
     bio = db.Column(db.String(250), unique=False)
@@ -20,8 +20,10 @@ class User(db.Model):
     watchlist = db.relationship('Watchlist')
     posts = db.relationship('Posts')
 
+
+
     def __repr__(self):
-        return '<User %r>' % self.user_name
+        return '<User %r>' % self.id
 
     def serialize(self):
         return {
@@ -44,6 +46,7 @@ class Posts(db.Model):
     headline = db.Column(db.String(100), nullable=False)
     content = db.Column(db.String(240), nullable=False)
     date_stamp = db.Column(db.String(80), nullable=False)
+    
 
     user = db.relationship('User', foreign_keys = [user_id])
 
