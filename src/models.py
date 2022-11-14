@@ -13,7 +13,7 @@ class User(db.Model):
     user_name = db.Column(db.String(30), unique=True, nullable=False)
     banner = db.Column(db.String(500), default="https://pbs.twimg.com/media/D-jnKUPU4AE3hVR.jpg", unique=False)
     profile_photo = db.Column(db.String(500), default="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png", unique=False)
-    bio = db.Column(db.String(250), unique=False)
+    bio = db.Column(db.String(250), unique=False, default="This is where you can write yourself a beautiful bio to tell everyone how amazing you are.")
     following = db.Column(db.Integer, unique=False)
     followers = db.Column(db.Integer, unique=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False, default=True)
