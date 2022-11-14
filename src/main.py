@@ -216,30 +216,15 @@ def change_password():
 def modify_profile():
     requestBody = request.get_json(force=True)
     user = User.query.get(requestBody["userId"])
-    email = requestBody["email"]
     name = requestBody["name"]
     user_name = requestBody["user_name"]
-    banner = requestBody["banner"]
-    profile_photo = requestBody["profile_photo"]
     bio = requestBody["bio"]
-    following = requestBody["following"]
-    followers = requestBody["followers"]
-    if email:
-        user.email = email
     if name:
         user.name = name
     if user_name:
         user.user_name = user_name
-    if banner:
-        user.banner = banner
-    if profile_photo:
-        user.profile_photo = profile_photo
     if bio:
         user.bio = bio
-    if following:
-        user.following = following
-    if followers:
-        user.followers = followers
     db.session.commit()
     return jsonify("success"), 200
 
